@@ -2,13 +2,11 @@ import { connectToDatabase } from "@/lib/db";
 import { User } from "@/models/User";
 import { NextResponse } from "next/server";
 
-
-
 export async function POST(request: NextResponse) {
 
     const { username, email, password, role } = await request.json();
 
-    if ([username, email, password, role].some(field => field?.trim() === "")) {
+    if ([username, email, password].some(field => field?.trim() === "")) {
         return NextResponse.json({
             success: false,
             message: "All fields are required"
@@ -25,19 +23,31 @@ export async function POST(request: NextResponse) {
             message: "Password must be atleast 8 characters"
         }, {
             status: 400
-        }
-        )
+        })
     }
 
     await connectToDatabase();
 
+    const existedUser = await User.find({ email });
 
-    const user = await User.create({
-        username,
-        email,
-        password,
-        role
-    })
+    if (existedUser) {
+        return NextResponse.json({
+            success: false,
+            message: "User already exists"
+        }, { status: 400 })
+    }
+
+    const user = role ?
+        await User.create({
+            username,
+            email,
+            password,
+            role
+        }) : await User.create({
+            username,
+            email,
+            password
+        });
 
     if (!user) {
         return NextResponse.json({
