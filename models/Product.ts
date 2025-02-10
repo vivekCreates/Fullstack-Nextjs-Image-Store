@@ -4,7 +4,9 @@ export interface IImageVarient {
     id?:ObjectId;
     type: "SQUARE" | "WIDE" | "POTRAIT";
     price: number;
-    licence: "personal" | "commercial"
+    licence: "personal" | "commercial";
+    createdAt?:Date;
+    updatedAt?:Date;
 }
 
 export interface IProduct{
@@ -12,7 +14,9 @@ export interface IProduct{
     name:string;
     description:string;
     imageUrl:string;
-    variants:IImageVarient
+    variants:IImageVarient;
+    createdAt?:Date;
+    updatedAt?:Date;
 }
 
 

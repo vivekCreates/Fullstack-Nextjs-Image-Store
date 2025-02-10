@@ -10,6 +10,8 @@ interface IOrder {
     razorpayPaymentId: string;
     amount: number;
     status: "pending" | "completed" | "failed"
+    createdAt?:Date;
+    updatedAt?:Date;
 }
 
 
