@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = process.env.MONGODB_URI!;
 
 if (!MONGODB_URI) {
     throw new Error("Please check your database URI string.")
@@ -9,21 +9,27 @@ if (!MONGODB_URI) {
 let cached = global.mongoose;
 
 if (!cached) {
-    cached = global.mongoose = {conn:null,promise:null}
+    cached = global.mongoose = { conn: null, promise: null }
 }
 
 export async function connectToDatabase() {
     if (cached.conn) {
         return cached.conn;
     }
-    if(!cached.promise){
+    if (!cached.promise) {
         const opts = {
-            bufferCommands:true,
-            maxPoolSize:5,
+            bufferCommands: true,
+            maxPoolSize: 5,
         };
+        cached.promise = mongoose
+            .connect(`${MONGODB_URI}image-store`, opts)
+            .then((mongoose) => {
+                console.log(`Mongodb connected successfully! DB host at ${mongoose.connection.host}`)
+                return mongoose.connection
+            }
+            );
     }
 
-    cached.promise = mongoose.connect(MONGODB_URI, opts).then(mongoose =>  mongoose.connection);
 
     try {
         cached.conn = await cached.promise;
