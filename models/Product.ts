@@ -14,7 +14,7 @@ export interface IProduct{
     name:string;
     description:string;
     imageUrl:string;
-    variants:IImageVarient;
+    variants:IImageVarient[];
     createdAt?:Date;
     updatedAt?:Date;
 }

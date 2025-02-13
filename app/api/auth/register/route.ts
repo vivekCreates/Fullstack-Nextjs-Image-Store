@@ -70,6 +70,7 @@ export async function POST(request: NextResponse) {
             }
         )
     } catch (error: any) {
+        console.error("Error:",error.message)
         return NextResponse.json({
             success: false,
             message: error.message
